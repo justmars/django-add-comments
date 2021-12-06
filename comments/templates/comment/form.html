@@ -1,0 +1,6 @@
+{% if user.is_authenticated %}
+    {% if form %}
+        {% load crispy_forms_tags %}
+        {% crispy form %}
+    {% endif %}
+{% endif %}

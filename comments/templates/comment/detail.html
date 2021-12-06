@@ -1,0 +1,41 @@
+<section>
+    <vstack spacing=s align-x=left>
+        <hstack spacing=s align-x=right>
+            <small stretch>{{comment.author}}: {{comment.created}}</small>
+            {% if user.is_authenticated and comment.author == user%}
+                <form>
+                    <input
+                        id="comment-{{comment.id}}" {% comment %} Helps auto-focus after change {% endcomment %}
+                        type="checkbox"
+                        role="switch"
+                        hx-target="closest section"
+                        hx-post="{% url 'comments:hx_toggle_comment' comment.id %}"
+                        hx-swap="outerHTML"
+                        {% if comment.is_public %}checked{% endif %}
+                    >
+                    <label for="comment-{{comment.id}}">
+                        <small>This is {% if comment.is_public %}public{% else %}private{% endif %}.</small>
+                    </label>
+                </form>
+                <divider></divider>
+                <span
+                    hx-get="{% url 'comments:hx_edit_comment' comment.id %}"
+                    hx-target="closest section"
+                    hx-swap="outerHTML"
+                >
+                    <small>Edit</small>
+                </span>
+                <divider></divider>
+                <span
+                    hx-delete="{% url 'comments:hx_del_comment' comment.id %}"
+                    hx-confirm="Are you sure you want to delete this comment?"
+                    hx-target="closest section"
+                    hx-swap="outerHTML swap:1s"
+                >
+                    <small>Delete</small>
+                </span>
+            {% endif %}
+        </hstack>
+        <span>{{ comment.content }}</span>
+    </vstack>
+</section>

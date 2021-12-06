@@ -1,0 +1,14 @@
+<list spacing="xl">
+    {% for comment in comments %}
+        {% if forloop.first and user.is_authenticated %}
+            {% include './inserter.html' %}
+        {% endif %}
+        {% include './card.html' with comment=comment %}
+    {% empty %}
+        {% if user.is_authenticated %}
+            {% include './inserter.html' %}
+        {% else %}
+            <h3>User must be logged into comment.</h3>
+        {% endif %}
+    {% endfor %}
+</list>

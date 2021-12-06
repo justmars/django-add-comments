@@ -1,0 +1,9 @@
+{% if user.is_authenticated %}
+    <section>
+        <h2>Add a comment</h2>
+        <div hx-trigger="load" hx-get="{{form_url}}" hx-target="this" hx-swap="innerHTML"></div>
+    </section>
+{% endif %}
+{% if inserted %}
+    {% include './card.html' with comment=inserted %}
+{% endif %}

@@ -1,0 +1,60 @@
+[tool.poetry]
+name = "django-add-comments"
+version = "0.0.1"
+description = "Add and display htmx comments to arbitrary Django models."
+authors = ["Marcelino G. Veloso III <mars@veloso.one>"]
+readme = "README.md"
+repository = "https://github.com/justmars/django-add-comments"
+license = "MIT"
+packages = [
+    { include = "comments" }, # because django-entries differs from entries
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+Django = "^3.2"
+django-extensions = "^3.1.5"
+django-crispy-forms = "^1.13.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+pytest-django = "^4.5.1"
+pytest-cov = "^2.12.1"
+mypy = "^0.902"
+black = "^21.12b0"
+isort = "^5.10.1"
+pre-commit = "^2.16.0"
+
+[tool.pytest]
+DJANGO_SETTINGS_MODULE = "config.settings" # depends on project root
+minversion = "6.0"
+addopts = "--ds=config.settings"
+testpaths = ["tests"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 79
+include_trailing_comma = 'True'
+
+[tool.black]
+line-length = 79
+include = '.pyi?$'
+exclude = '''
+/(
+    .git
+    | .hg
+    | .mypy_cache
+    | .tox
+    | .venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)/
+'''
+
+
+[build-system]
+requires = ["poetry-core>=1.1.12"]
+build-backend = "poetry.core.masonry.api"
