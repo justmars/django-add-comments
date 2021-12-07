@@ -17,10 +17,10 @@ class Sentinel(AbstractCommentable): # add to class declaration
 
 ## Commenting Features
 
-| Action                                          | Description                                | Authorization                                   |
-| ----------------------------------------------- | ------------------------------------------ | ----------------------------------------------- |
-| View list comments on a sentinel                | Maybe filter public/private comments later | All users                                       |
-| Get comment form when sentinel                  | Reactive add comment form via htmx [^1]    | Only authenticated users authorized to get/post |
-| Delete / update comment (`content`, `is_public) | Simple permission checking                 | Only authenticated authors authorized           |
+| Action                | Authorization       | Description                          |
+| --------------------- | ------------------- | ------------------------------------ |
+| View comments list    | All users           | Add filter public/private later      |
+| Get comment form      | Authenticated users | Reactive via htmx / hyperscript [^1] |
+| Delete / edit comment | Aauthorized authors | Reactive via htmx / hyperscript [^1] |
 
-[^1]: [Without page refresh](./comments/docs/frontend.md)
+[^1]: [No page refresh](./comments/docs/frontend.md)
