@@ -35,11 +35,7 @@ More specifically, the instances of such sentinel – e.g. Sentinel with _id=1_,
 All instances of the `Sentinel` model therefore will need their own commenting actions. This app produces those actions through urls. See the following shell commands that show the desired url routes per sentinel instance:
 
 ```zsh
-# instance is made, e.g. id=1, id=2, etc.
->>> obj = Sentinel.objects.create(title="A sample title")
-
-# distinguish a `Sentinel` model with comments from an `Essay` model with comments using the app_name
->>> from sentinels.urls import app_name # required
+>>> obj = Sentinel.objects.create(title="A sample title") # instance is made, e.g. id=1, id=2, etc.
 >>> obj.add_comment_url # url to add a comment to `A sample title`
 ```
 
