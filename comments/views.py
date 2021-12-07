@@ -49,19 +49,3 @@ def hx_edit_comment(request: HttpRequest, id: uuid.UUID) -> TemplateResponse:
         comment.save(update_fields=["content", "is_public"])
         return TemplateResponse(request, CARD, {"comment": comment})
     return TemplateResponse(request, CARD, {"form": form, "comment": comment})
-
-
-@login_required
-def hx_add_comment_to_target_obj(
-    request: HttpRequest, target_obj: ContentType
-) -> Optional[TemplateResponse]:
-    """This view should be inherited by a sentinel `target_obj`, which is the obj instance being commented on."""
-    form = InputCommentModelForm(request.POST or None, submit_url=request.path)
-    if request.method == "POST" and form.is_valid():
-        comment = form.save(commit=False)
-        comment.author = request.user
-        comment.content_object = target_obj
-        comment.save()
-        context = {"inserted": comment, "form_url": request.path}
-        return TemplateResponse(request, "comment/inserter.html", context)
-    return TemplateResponse(request, "comment/form.html", {"form": form})

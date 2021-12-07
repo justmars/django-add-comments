@@ -3,17 +3,16 @@ from http import HTTPStatus
 import pytest
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.urls import reverse
 
-from sentinels.views import hx_comment_adder
+from sentinels.models import Sentinel
 
 
 @pytest.mark.django_db
 def test_add_comment_url_exists(a_sentinel):
-    endpoint = "/add_comment/target/1"
-    route = reverse("sentinels:hx_comment_adder", args=[a_sentinel.pk])
+    label = "hx_add_comment_to_sentinel"
+    assert Sentinel.uniform_add_comment_label == label
     assert hasattr(a_sentinel, "add_comment_url")
-    assert a_sentinel.add_comment_url == endpoint == route
+    assert a_sentinel.add_comment_url == f"/{label}/1"
 
 
 @pytest.mark.django_db
@@ -35,7 +34,7 @@ def test_add_comment_post_authenticated(rf, a_commenter, a_sentinel):
     test_text = "New content in lorem ipsum formatting"
     request = rf.post(a_sentinel.add_comment_url, data={"content": test_text})
     request.user = a_commenter
-    response = hx_comment_adder(request, a_sentinel.pk)
+    response = Sentinel.add_comment_func(request, a_sentinel.pk)
     assert isinstance(response, TemplateResponse)
     assert HTTPStatus.OK == response.status_code
     assert "comment/inserter.html" == response.template_name

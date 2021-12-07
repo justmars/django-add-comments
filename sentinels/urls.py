@@ -1,26 +1,41 @@
 from django.urls import path
 from django.views.generic import DetailView, ListView
 
-from .models import Sentinel
-from .views import hx_comment_adder
+from .models import Sentinel, SentinelSlugged
 
-app_name = "sentinels"
-urlpatterns = [
+sentinel_patterns = [
+    Sentinel.add_comment_path,
     path(
-        "add_comment/target/<int:pk>",
-        hx_comment_adder,
-        name="hx_comment_adder",
-    ),
-    path(
-        "detail/<int:pk>",
+        "detail/sentinel/<int:pk>",
         DetailView.as_view(
             model=Sentinel, template_name="sentinel_detail.html"
         ),
         name="sentinel_detail",
     ),
+]
+
+sentinel_slugged_patterns = [
+    SentinelSlugged.add_comment_path,
     path(
-        "",
-        ListView.as_view(model=Sentinel, template_name="sentinel_list.html"),
-        name="sentinel_list",
+        "detail/sentinel_slugged/<slug:slug>",
+        DetailView.as_view(
+            model=SentinelSlugged, template_name="sentinel_detail.html"
+        ),
+        name="sentinel_slugged_detail",
     ),
 ]
+
+app_name = "sentinels"
+urlpatterns = (
+    sentinel_patterns
+    + sentinel_slugged_patterns
+    + [
+        path(
+            "",
+            ListView.as_view(
+                model=Sentinel, template_name="sentinel_list.html"
+            ),
+            name="sentinel_list",
+        ),
+    ]
+)

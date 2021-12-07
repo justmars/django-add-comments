@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "django-add-comments"
-version = "0.0.1"
+version = "0.0.2"
 description = "Add and display htmx comments to arbitrary Django models."
 authors = ["Marcelino G. Veloso III <mars@veloso.one>"]
 readme = "README.md"
 repository = "https://github.com/justmars/django-add-comments"
 license = "MIT"
 packages = [
-    { include = "comments" }, # because django-entries differs from entries
+    { include = "comments" }, # because 'django-add-comments'as package name differs from 'comments' app directory
 ]
 
 [tool.poetry.dependencies]
