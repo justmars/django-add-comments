@@ -9,25 +9,27 @@
 
 A sentinel is the model being commented on.
 
-We've created a dummy `Sentinel` model to represent this construct. Let's say we've initialized one model instance called `obj` with `slug`="My first title".
+We've created a dummy `Sentinel` model to represent this construct.
+
+Let's say we've initialized one model instance called `obj` with `slug`="a-sample-title".
 
 What we'd like is the ability to write a comment to `obj` through a url represented by: `obj.add_comment_url`
 
 `@add_comment_url` thus needs to become a property of the `Sentinel` model.
 
-## What are pre-requisites
+## Namespace as a prequisite
 
 ```python
 # sentinels/urls.py
 from .views import SentinelListView
 
-app_name = "sentinels" # this is the namespace that should be declared
+app_name = "sentinels" # this is a namespace
 urlpatterns = [path("", SentinelListView.as_view(), name="sentinel_list"), ...]
 
 ...
-
+# see connection of `name` to `app_name` via reverse()
 from django.urls import reverse
-def sample_func():  # url returned will call `SentinelListView.as_view()`
+def sample_func():
     return reverse("sentinels:sentinel_list")
 
 ```
@@ -91,31 +93,30 @@ def sample_func():  # url returned will call `SentinelListView.as_view()`
 
    _Gotcha_: revise `<slug:slug>` to `<pk:int>` (and the other `slug` declarations above), if the `pk` is used as a primary key.
 
-4. Add path to the sentinel's url patterns
+### sentinels/urls.py
 
-   ```python
-   # sentinels/urls.py
-   from .models import Sentinel
+Add path to the sentinel's url patterns
 
-   app_name = "sentinels" # remember the app_name above in relation to the `add_comment_url` property
-   url_patterns = [
-       Sentinel.add_comment_path, # This is really just a shortcut to a created "name route to a view" function.
-       ...
-    ]
-   ```
+```python
+# sentinels/urls.py
+from .models import Sentinel
 
-5. Add template tag to sentinel's template to show form with list
+app_name = "sentinels" # remember the app_name above in relation to the `add_comment_url` property
+url_patterns = [
+    Sentinel.add_comment_path, # This is really just a shortcut to a created "name route to a view" function.
+    ...
+]
+```
 
-   ```jinja
-   <!-- sentinels/templates/sentinel_detail.html -->
-   <h1>Title: {{ sentinel_object.title }}</h1>
-   {% load comments %} <!-- see templatetags/comments.py which contains `object.add_comment_url`  -->
-   {% list_comments sentinel_object %} <!-- the `sentinel_object` is whatever variable passed to the template -->
-   ```
+### sentinels/templates/sentinel_detail.html
 
-   The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](./comments/templatetags/comments.py).
+Add template tag to sentinel's template to show form with list
 
-## Repeat process for other models
+```jinja
+<!-- sentinels/templates/sentinel_detail.html -->
+<h1>Title: {{ sentinel_object.title }}</h1>
+{% load comments %} <!-- see templatetags/comments.py which contains `object.add_comment_url`  -->
+{% list_comments sentinel_object %} <!-- the `sentinel_object` is whatever variable passed to the template -->
+```
 
-1. The procedure above was undertaken with respect to the `Sentinel` model.
-2. For another Django app, let's say `articles` with an `Article` model, the same procedure can be followed.
+The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](./comments/templatetags/comments.py).

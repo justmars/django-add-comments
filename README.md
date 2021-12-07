@@ -1,33 +1,30 @@
 # Comments
 
-Enable basic commenting functionality for an arbitrary Django model that contains an `AbstractCommentable` mixin class.
-
-## Overview
+Enable basic commenting for an arbitrary Django model by (a) adding an `AbstractCommentable` mixin and (b) configuring the properties and urls.
 
 ```python
 from comments.models import AbstractCommentable
 
-# sentinels/models.py
-class Sentinel(AbstractCommentable): # arbitrary
+# app_model/models.py
+class Sentinel(AbstractCommentable): # arbitrary app_model
     title = models.CharField(max_length=50)
     ...
 
 # comments/models.py
-class AbstractCommentable(models.Model): # generic foreign relationships to comments
-    comments = GenericRelation(Comment, related_query_name="%(app_label)s_%(class)ss")
+class AbstractCommentable(models.Model):
+    comments = GenericRelation(Comment) # comments connected to sentinel instance
 
     class Meta:
         abstract = True
 ```
 
-Once setup, can dive into [understanding the frontend](./comments/docs/frontend.md) through the use of htmx and hyperscript.
-
 ## Quickstart
 
-1. [Install app](./comments/docs/setup.md)
-2. [Add generic comments to your model](./comments/docs/add_comments.md)
+1. [Install](./comments/docs/setup.md) django-add-comments app
+2. [Configure](./comments/docs/add_comments.md) target model's properties, urls, template]
+3. Once setup, can dive into understanding htmx-driven [frontend](./comments/docs/frontend.md).
 
-## Premises
+## Reusability
 
 Any model e.g. `Essay`, `Article`, etc... and (not just `Sentinel`) can be "commentable". But for purposes of demonstration, we'll use "sentinel" to refer to the arbitrary model that will have its own `comments` field.
 
@@ -40,3 +37,5 @@ More specifically, the instances of such sentinel – e.g. Sentinel with _id=1_,
 5. Toggling visibility of the comment to the public.
 
 All instances of the `Sentinel` model therefore will need their own commenting actions.
+
+The [procedure](./comments/docs/add_comments.md) described in the docs related to a hypothetical `Sentinel` model. For another Django app, let's say an `articles` app with an `Article` model, the same procedure can be followed.
