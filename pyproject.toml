@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-add-comments"
-version = "0.0.3"
+version = "0.0.4"
 description = "Add and display htmx comments to arbitrary Django models."
 authors = ["Marcelino G. Veloso III <mars@veloso.one>"]
 readme = "README.md"
@@ -11,8 +11,8 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-Django = "^3.2"
+python = "^3.8"
+Django = "^4.0"
 django-extensions = "^3.1.5"
 django-crispy-forms = "^1.13.0"
 

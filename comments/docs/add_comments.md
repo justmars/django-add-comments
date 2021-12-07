@@ -72,7 +72,7 @@ def sample_func():
    # sentinels/models.py
    class Sentinel(AbstractCommentable):
 
-       id = models.UUIDField ...
+       id = models.UUIDField ... # identifier is UUID
        slug = models.Slugfield ...
 
        @cached_property # copy this to the sentinel model, note `slug` as identifier
@@ -91,7 +91,12 @@ def sample_func():
            return cls.set_add_comment_path("<slug:slug>", cls.add_comment_func)
    ```
 
-   _Gotcha_: revise `<slug:slug>` to `<pk:int>` (and the other `slug` declarations above), if the `pk` is used as a primary key.
+   _Gotcha_: if `pk` is identifier, revise `<slug:slug>` to `<pk:int>` above:
+
+   1. `self.set_add_comment_url(app_name, self.pk)`
+   2. `def add_comment_func(cls, request, pk: int):`
+   3. `target = cls.objects.get(pk=int)`
+   4. `cls.set_add_comment_path("<pk:int>", cls.add_comment_func)`
 
 ### sentinels/urls.py
 
@@ -119,4 +124,4 @@ Add template tag to sentinel's template to show form with list
 {% list_comments sentinel_object %} <!-- the `sentinel_object` is whatever variable passed to the template -->
 ```
 
-The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](./comments/templatetags/comments.py).
+The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](../templatetags/comments.py).
