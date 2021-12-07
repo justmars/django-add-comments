@@ -2,5 +2,5 @@
 {% block content %}
     <h1>Title: {{ object.title }}</h1>
     {% load comments %}
-    {% list_comments %}
+    {% list_comments object %}
 {% endblock content %}

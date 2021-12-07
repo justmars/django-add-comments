@@ -1,14 +1,12 @@
 import uuid
-from typing import Optional
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.contenttypes.models import ContentType
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_http_methods
 
-from .forms import InputCommentModelForm
+from .forms import CommentModelForm
 from .models import Comment
 
 CARD = "comment/card.html"
@@ -39,7 +37,7 @@ def hx_del_comment(request: HttpRequest, id: uuid.UUID) -> HttpResponse:
 def hx_edit_comment(request: HttpRequest, id: uuid.UUID) -> TemplateResponse:
     """If a `form` is passed to the card, the update view is called; otherwse the comment's detail view is displayed."""
     comment = Comment.get_for_user(id, request.user)
-    form = InputCommentModelForm(
+    form = CommentModelForm(
         request.POST or None,
         instance=comment,
         submit_url=request.path,

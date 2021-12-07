@@ -5,7 +5,7 @@ from django import forms
 from .models import Comment
 
 
-class InputCommentModelForm(forms.ModelForm):
+class CommentModelForm(forms.ModelForm):
     """This should be rendered inside a <section> to use swapping functions."""
 
     content = forms.CharField(widget=forms.Textarea(attrs={"rows": "4"}))

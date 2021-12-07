@@ -1,9 +1,8 @@
 import uuid
 
-from django.contrib.auth.decorators import login_required
 from django.db import models
 from django.template.response import TemplateResponse
-from django.urls import URLPattern, path, reverse
+from django.urls import URLPattern, reverse
 from django.utils.functional import cached_property, classproperty
 from django_extensions.db.fields import AutoSlugField
 
@@ -31,7 +30,8 @@ class Sentinel(AbstractCommentable):
 
     @classmethod
     def add_comment_func(cls, request, pk: int) -> TemplateResponse:
-        return cls.set_comment_form(request, cls.objects.get(pk=pk))
+        target = cls.objects.get(pk=pk)
+        return cls.allow_commenting_form_on_target_instance(request, target)
 
     @classproperty
     def add_comment_path(cls) -> URLPattern:
@@ -61,7 +61,8 @@ class SentinelSlugged(AbstractCommentable):
 
     @classmethod
     def add_comment_func(cls, request, slug: str) -> TemplateResponse:
-        return cls.set_comment_form(request, cls.objects.get(slug=slug))
+        target = cls.objects.get(slug=slug)
+        return cls.allow_commenting_form_on_target_instance(request, target)
 
     @classproperty
     def add_comment_path(cls) -> URLPattern:

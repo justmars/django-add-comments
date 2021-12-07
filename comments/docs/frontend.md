@@ -20,7 +20,7 @@ When the `htmx`-ed `<div>` is loaded to the DOM, however, a few things happen be
 {% endif %}
 ```
 
-The loading of the `<div>` triggers a `GET` request to the `form_url` aka `obj.add_comment_url`. The response is swapped into the DOM, replacing `this` blank div with a rendered `<form></form>`, i.e. `InputCommentModelForm`.
+The loading of the `<div>` triggers a `GET` request to the `form_url` aka `obj.add_comment_url`. The response is swapped into the DOM, replacing `this` blank div with a rendered `<form></form>`, i.e. `CommentModelForm`.
 
 No page refresh was done, courtesy of html-sent-over-the-wire.
 

@@ -64,48 +64,76 @@ class AbstractCommentable(models.Model):
         abstract = True
 
     @classproperty
-    def uniform_add_comment_label(cls) -> str:
-        """Creates a default name (and the prefix of the endpoint) for the prospective `add_comment_path`."""
+    def _comment_prefix(cls) -> str:
+        """Creates prefix for the route of the prospective `add_comment_path` based on inheriting model.
+
+        Returns:
+            str: add_comment/entry [for an inheriting model named `Entry`]
+        """
+        return f"add_comment/{cls._meta.model_name}"
+
+    @classproperty
+    def _comment_label(cls) -> str:
+        """Creates a name for the prospective `add_comment_path` based on inheriting model.
+
+        Returns:
+            str: hx_add_comment_to_entry [for an inheriting model named `Entry`]
+        """
         return f"hx_add_comment_to_{cls._meta.model_name}"
 
     @classmethod
-    def set_add_comment_url(cls, app_name: str, identifier) -> str:
-        """An `add_comment_url` needs to be declared by all models that inherit from `AbstractCommentable`. Ths will generate a named_route to be used in URL patterns based on the model name. If the model name is `Entry`, the `commenting_func_name` will be `hx_add_comment_to_entry`. This string will then be added to the app name, and the instance id, to form the full route."""
-        named_route = f"{app_name}:{cls.uniform_add_comment_label}"
-        return reverse(named_route, args=[identifier])  # can be pk or slug
+    def set_add_comment_url(cls, app_name: str, idx) -> str:
+        """An `add_comment_url` needs to be initialized by all models inheriting from `AbstractCommentable`. This function generates a named route. The route originates from `set_add_comment_path`, which is added by the inheriting model to its URL patterns.
+
+        Args:
+            app_name (str): Only generated after the inheriting model is declared and the urlpatterns is labelled through `app_name`. See inheriting app's `urls.py`.
+            idx ([type]): This can either be the inheriting model instance's `slug` or `pk`, depending on the model's structure.
+
+        Returns:
+            str: a URL path under the namespace of `app_name`, directed towards `idx` instance. Calling this URL will enable the commenting function under `allow_commenting_form_on_target_instance()` to work.
+        """
+        return reverse(f"{app_name}:{cls._comment_label}", args=[idx])
 
     @classmethod
     def set_add_comment_path(
-        cls, url_endpoint: str, comment_form_processor: Callable
+        cls, endpoint_token: str, func_comment: Callable
     ) -> URLPattern:
-        """An `add_comment_url` needs to be declared by all models that inherit from `AbstractCommentable`. Ths will generate a named_route to be used in URL patterns based on the model name. If the model name is `Entry`, the `commenting_func_name` will be `hx_add_comment_to_entry`. This string will then be added to the app name, and the instance id, to form the full route."""
-        route = f"{cls.uniform_add_comment_label}/{url_endpoint}"
-        name = cls.uniform_add_comment_label
-        return path(route, comment_form_processor, name=name)
+        """This results in a `path` object that needs to be added to `urlpatterns`.
+
+        Args:
+            endpoint_token (str): e.g. <pk:int> or <title_slug:slug>, a converter URL parameter based on path converters
+            func_comment (Callable): function call results in a TemplateResponse
+
+        Returns:
+            URLPattern: Should be added to `urlpatterns` list of `app_name`, inheriting child of AbstractCommentable.
+        """
+        route = f"{cls._comment_prefix}/{endpoint_token}"
+        return path(route, func_comment, name=cls._comment_label)
 
     @classmethod
-    def set_comment_form(
-        cls, request: HttpRequest, target_obj: models.Model
+    def allow_commenting_form_on_target_instance(
+        cls, request: HttpRequest, target_obj: ContentType
     ) -> Union[TemplateResponse, HttpResponseRedirect]:
-        """Will create function callable in the inheriting `app_name`'s `urlpatterns` list. This view should be inherited by a sentinel `target_obj`, which is the obj instance being commented on."""
-        from .forms import InputCommentModelForm
+        """This cannot be determined without a declaration of the inheriting model. After the `target_obj` is determined, the signature will be complete for `func_comment` in `set_add_comment_path()`.
 
-        if not request.user.is_authenticated:
-            # only logged in users can post a comment
+        Args:
+            request (HttpRequest): Can be either GET or POST methods.
+            target_obj (ContentType): The model instance being commented on.
+
+        Returns:
+            Union[TemplateResponse, HttpResponseRedirect]: If the user is not logged in, redirect via `HttpResponseRedirect`. Otherwise enable get/post requests resulting in a `TemplateResponse`.
+        """
+        from .forms import CommentModelForm
+
+        if not request.user.is_authenticated:  # required to comment
             return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
 
-        form = InputCommentModelForm(
-            request.POST or None,
-            submit_url=request.path,
-        )
+        form = CommentModelForm(request.POST or None, submit_url=request.path)
         if request.method == "POST" and form.is_valid():
             comment = form.save(commit=False)
             comment.author = request.user
             comment.content_object = target_obj
             comment.save()
-            return TemplateResponse(
-                request,
-                "comment/inserter.html",
-                {"inserted": comment, "form_url": request.path},
-            )
+            context = {"inserted": comment, "form_url": request.path}
+            return TemplateResponse(request, "comment/inserter.html", context)
         return TemplateResponse(request, "comment/form.html", {"form": form})

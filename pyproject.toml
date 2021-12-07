@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-add-comments"
-version = "0.0.2"
+version = "0.0.3"
 description = "Add and display htmx comments to arbitrary Django models."
 authors = ["Marcelino G. Veloso III <mars@veloso.one>"]
 readme = "README.md"
