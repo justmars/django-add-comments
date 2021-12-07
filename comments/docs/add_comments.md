@@ -34,58 +34,86 @@ def sample_func():  # url returned will call `SentinelListView.as_view()`
 
 ## What are the steps of configuration?
 
-### Add properties to the sentinel model
+### sentinels/models.py
 
-Copy attributes to the sentinel model, e.g. Entry, Article, etc. **Note**: revise `slug` to `pk`, if the latter is used as a primary key.
+1. Add imports
 
-```python
-# sentinels/models.py
-from django.template.response import TemplateResponse
-from django.urls import reverse, URLPattern
-from django.utils.functional import cached_property, classproperty
-from comments.models import AbstractCommentable
+   ```python
+   # sentinels/models.py
+   from comments.models import AbstractCommentable # new
+   from django.template.response import TemplateResponse # new
+   from django.urls import reverse, URLPattern # new
+   from django.utils.functional import cached_property, classproperty # new
+   ```
 
-class Sentinel(AbstractCommentable):
+2. Add the mixin to the sentinel model
 
-    id = models.UUIDField ...
-    slug = models.Slugfield ...
+   Before:
 
-    @cached_property # copy this to the sentinel model, note `slug` as identifier
-    def add_comment_url(self) -> str:
-        from .urls import app_name
+   ```python
+   # sentinels/models.py
+   class Sentinel(models.Model):
+       ...
+   ```
 
-        return self.set_add_comment_url(app_name, self.slug)
+   After:
 
-    @classmethod # copy this to the sentinel model, note `slug` as identifier
-    def add_comment_func(cls, request, slug: str) -> TemplateResponse:
-        target = cls.objects.get(slug=slug)
-        return cls.allow_commenting_form_on_target_instance(request, target)
+   ```python
+   # sentinels/models.py
+   class Sentinel(AbstractCommentable): # new
+       ...
+   ```
 
-    @classproperty # copy this to the sentinel model, note `slug` as identifier
-    def add_comment_path(cls) -> URLPattern:
-        return cls.set_add_comment_path("<slug:slug>", cls.add_comment_func)
-```
+3. Add properties to the sentinel model
 
-### Add path to the sentinel's url patterns
+   ```python
+   # sentinels/models.py
+   class Sentinel(AbstractCommentable):
 
-```python
-# sentinels/urls.py
-from .models import Sentinel
+       id = models.UUIDField ...
+       slug = models.Slugfield ...
 
-app_name = "sentinels"
-url_patterns = [Sentinel.add_comment_path, ...] # This is really just a shortcut to a created "name route to a view" function.
-```
+       @cached_property # copy this to the sentinel model, note `slug` as identifier
+       def add_comment_url(self) -> str:
+           from .urls import app_name
 
-## Add template tag to sentinel's template to show form with list
+           return self.set_add_comment_url(app_name, self.slug)
 
-```jinja
-<!-- sentinels/templates/sentinel_detail.html -->
-<h1>Title: {{ sentinel_object.title }}</h1>
-{% load comments %} <!-- see templatetags/comments.py which contains `object.add_comment_url`  -->
-{% list_comments sentinel_object %} <!-- the `sentinel_object` is whatever variable passed to the template -->
-```
+       @classmethod # copy this to the sentinel model, note `slug` as identifier
+       def add_comment_func(cls, request, slug: str) -> TemplateResponse:
+           target = cls.objects.get(slug=slug)
+           return cls.allow_commenting_form_on_target_instance(request, target)
 
-The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](./comments/templatetags/comments.py).
+       @classproperty # copy this to the sentinel model, note `slug` as identifier
+       def add_comment_path(cls) -> URLPattern:
+           return cls.set_add_comment_path("<slug:slug>", cls.add_comment_func)
+   ```
+
+   _Gotcha_: revise `<slug:slug>` to `<pk:int>` (and the other `slug` declarations above), if the `pk` is used as a primary key.
+
+4. Add path to the sentinel's url patterns
+
+   ```python
+   # sentinels/urls.py
+   from .models import Sentinel
+
+   app_name = "sentinels" # remember the app_name above in relation to the `add_comment_url` property
+   url_patterns = [
+       Sentinel.add_comment_path, # This is really just a shortcut to a created "name route to a view" function.
+       ...
+    ]
+   ```
+
+5. Add template tag to sentinel's template to show form with list
+
+   ```jinja
+   <!-- sentinels/templates/sentinel_detail.html -->
+   <h1>Title: {{ sentinel_object.title }}</h1>
+   {% load comments %} <!-- see templatetags/comments.py which contains `object.add_comment_url`  -->
+   {% list_comments sentinel_object %} <!-- the `sentinel_object` is whatever variable passed to the template -->
+   ```
+
+   The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](./comments/templatetags/comments.py).
 
 ## Repeat process for other models
 

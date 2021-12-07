@@ -1,12 +1,12 @@
 # Setup
 
-## Install in your virtual environment
+## Install within your virtual environment
 
 ```zsh
 .venv> pip3 install django-add-comments # poetry add django-add-comments
 ```
 
-## Add to project settings
+## Add aapp to project settings
 
 ```python
 # in project_folder/settings.py
@@ -17,7 +17,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-## Add to project urlspatterns
+## Add new routes to project urlspatterns
 
 ```python
 # in project_folder/urls.py
@@ -26,4 +26,10 @@ urlpatterns = [
     ...,
     path('comments/', include('comments.urls')) # new
 ]
+```
+
+## Add Comment model to database
+
+```zsh
+.venv> python manage.py migrate
 ```
