@@ -1,12 +1,21 @@
 # Setup
 
-## Install within your virtual environment
+## Load virtual env
 
 ```zsh
-.venv> pip3 install django-add-comments # poetry add django-add-comments
+.venv> poetry add django-add-comments # pip3 install django-add-comments
 ```
 
-## Add aapp to project settings
+Will include dependencies from [pyproject.toml](../../pyproject.toml):
+
+```toml
+python = "^3.8"
+Django = "^4.0"
+django-extensions = "^3.1.5"
+django-crispy-forms = "^1.13.0"
+```
+
+## Add app to project settings
 
 ```python
 # in project_folder/settings.py
@@ -17,14 +26,14 @@ INSTALLED_APPS = [
 ]
 ```
 
-## Add new routes to project urlspatterns
+## Add basic routes to urlpatterns
 
 ```python
 # in project_folder/urls.py
 from django.urls import path, include # new
 urlpatterns = [
     ...,
-    path('comments/', include('comments.urls')) # new
+    path('comments/', include('comments.urls')) # routes for update, delete, view, toggle comment
 ]
 ```
 
