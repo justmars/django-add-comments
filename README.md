@@ -10,17 +10,15 @@ class Sentinel(AbstractCommentable): # add to class declaration
     title = models.CharField(max_length=50)
 ```
 
-## Quickstart
-
-1. [Install](./comments/docs/setup.md) django-add-comments app
-2. [Copy / paste snippets](./comments/docs/add_comments.md) to target model's properties, urls, template
-
-## Commenting Features
-
 | Action                | Authorization       | Description                          |
 | --------------------- | ------------------- | ------------------------------------ |
 | View comments list    | All users           | Add filter public/private later      |
 | Get comment form      | Authenticated users | Reactive via htmx / hyperscript [^1] |
-| Delete / edit comment | Aauthorized authors | Reactive via htmx / hyperscript [^1] |
+| Delete / edit comment | Authorized authors  | Reactive via htmx / hyperscript [^1] |
+
+## Quickstart
+
+1. [Install](./comments/docs/setup.md) django-add-comments app
+2. [Copy / paste snippets](./comments/docs/add_comments.md) to enable features
 
 [^1]: [No page refresh](./comments/docs/frontend.md)
