@@ -4,7 +4,7 @@ from django.core.exceptions import ImproperlyConfigured
 register = template.Library()
 
 
-@register.inclusion_tag("comment/list.html", takes_context=True)
+@register.inclusion_tag("comments/list.html", takes_context=True)
 def list_comments(context, sentinel_target_obj):
 
     if not hasattr(sentinel_target_obj, "comments"):

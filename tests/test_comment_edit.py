@@ -6,6 +6,8 @@ from django.http.response import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.urls import reverse
 
+from comments.views import CARD
+
 ENDPOINT = lambda x: f"/comments/edit/{x}"
 ROUTE = lambda x: reverse("comments:hx_edit_comment", kwargs={"id": x})
 
@@ -39,7 +41,7 @@ def test_edit_comment_get_authenticated(
     response = client.get(url)
     assert isinstance(response, TemplateResponse)
     assert HTTPStatus.OK == response.status_code
-    assert "comment/card.html" == response.template_name
+    assert CARD == response.template_name
 
 
 @pytest.mark.django_db
@@ -52,4 +54,4 @@ def test_edit_comment_post_authenticated(
     response = client.post(url, data=modified_data)
     assert isinstance(response, TemplateResponse)
     assert HTTPStatus.OK == response.status_code
-    assert "comment/card.html" == response.template_name
+    assert CARD == response.template_name

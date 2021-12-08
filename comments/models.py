@@ -135,5 +135,5 @@ class AbstractCommentable(models.Model):
             comment.content_object = target_obj
             comment.save()
             context = {"inserted": comment, "form_url": request.path}
-            return TemplateResponse(request, "comment/inserter.html", context)
-        return TemplateResponse(request, "comment/form.html", {"form": form})
+            return TemplateResponse(request, "comments/inserter.html", context)
+        return TemplateResponse(request, "comments/form.html", {"form": form})

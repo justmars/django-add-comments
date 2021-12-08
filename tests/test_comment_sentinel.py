@@ -35,7 +35,7 @@ def test_add_comment_get_authenticated(client, a_commenter, a_sentinel):
     response = client.get(a_sentinel.add_comment_url)
     assert isinstance(response, TemplateResponse)
     assert HTTPStatus.OK == response.status_code
-    assert "comment/form.html" == response.template_name
+    assert "comments/form.html" == response.template_name
 
 
 def test_add_comment_post_authenticated(rf, a_commenter, a_sentinel):
@@ -45,7 +45,7 @@ def test_add_comment_post_authenticated(rf, a_commenter, a_sentinel):
     response = Sentinel.add_comment_func(request, a_sentinel.pk)
     assert isinstance(response, TemplateResponse)
     assert HTTPStatus.OK == response.status_code
-    assert "comment/inserter.html" == response.template_name
+    assert "comments/inserter.html" == response.template_name
     assert test_text in response.context_data["inserted"].content
 
 

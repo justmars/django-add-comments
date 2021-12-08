@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 from .forms import CommentModelForm
 from .models import Comment
 
-CARD = "comment/card.html"
+CARD = "comments/card.html"
 
 
 def hx_view_comment(request: HttpRequest, id: uuid.UUID) -> TemplateResponse:

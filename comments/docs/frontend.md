@@ -58,7 +58,7 @@ def hx_add_comment_to_target_obj(request: HttpRequest, target_obj: ContentType):
     if request.method == "POST" and form.is_valid():
         return TemplateResponse(
                 request,
-                "comment/inserter.html", # see comments/templates/inserter.html
+                "comments/inserter.html", # see comments/templates/inserter.html
                 {
                     "inserted": comment, # newly inserted comment at the top of the list of comments
                     "form_url": request.path, # reloads the form because of hx-trigger "load"
