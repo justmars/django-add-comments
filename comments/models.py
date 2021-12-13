@@ -64,35 +64,22 @@ class AbstractCommentable(models.Model):
         abstract = True
 
     @classproperty
-    def _comment_prefix(cls) -> str:
-        """Creates prefix for the route of the prospective `add_comment_path` based on inheriting model.
-
-        Returns:
-            str: add_comment/entry [for an inheriting model named `Entry`]
-        """
-        return f"add_comment/{cls._meta.model_name}"
-
-    @classproperty
     def _comment_label(cls) -> str:
-        """Creates a name for the prospective `add_comment_path` based on inheriting model.
-
-        Returns:
-            str: hx_add_comment_to_entry [for an inheriting model named `Entry`]
-        """
-        return f"hx_add_comment_to_{cls._meta.model_name}"
+        return f"add_comment_{cls._meta.model_name}"
 
     @classmethod
-    def set_add_comment_url(cls, app_name: str, idx) -> str:
+    def set_add_comment_url(cls, idx) -> str:
         """An `add_comment_url` needs to be initialized by all models inheriting from `AbstractCommentable`. This function generates a named route. The route originates from `set_add_comment_path`, which is added by the inheriting model to its URL patterns.
 
         Args:
-            app_name (str): Only generated after the inheriting model is declared and the urlpatterns is labelled through `app_name`. See inheriting app's `urls.py`.
             idx ([type]): This can either be the inheriting model instance's `slug` or `pk`, depending on the model's structure.
 
         Returns:
             str: a URL path under the namespace of `app_name`, directed towards `idx` instance. Calling this URL will enable the commenting function under `allow_commenting_form_on_target_instance()` to work.
         """
-        return reverse(f"{app_name}:{cls._comment_label}", args=[idx])
+        return reverse(
+            f"{cls._meta.app_label}:{cls._comment_label}", args=[idx]
+        )
 
     @classmethod
     def set_add_comment_path(
@@ -107,8 +94,11 @@ class AbstractCommentable(models.Model):
         Returns:
             URLPattern: Should be added to `urlpatterns` list of `app_name`, inheriting child of AbstractCommentable.
         """
-        route = f"{cls._comment_prefix}/{endpoint_token}"
-        return path(route, func_comment, name=cls._comment_label)
+        return path(
+            f"{cls._comment_label}/{endpoint_token}",
+            func_comment,
+            name=cls._comment_label,
+        )
 
     @classmethod
     def allow_commenting_form_on_target_instance(

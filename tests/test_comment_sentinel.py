@@ -10,14 +10,14 @@ from sentinels.models import Sentinel
 
 @pytest.mark.django_db
 def test_sentinel_instance_add_comment_url_exists(a_sentinel):
-    assert Sentinel._comment_prefix == "add_comment/sentinel"
+    assert Sentinel._comment_label == "add_comment_sentinel"
     assert hasattr(a_sentinel, "add_comment_url")
-    assert a_sentinel.add_comment_url == f"/{Sentinel._comment_prefix}/1"
+    assert a_sentinel.add_comment_url == f"/{Sentinel._comment_label}/1"
 
 
 @pytest.mark.django_db
 def test_sentinel_instance_add_comment_path_exists(a_sentinel):
-    assert Sentinel._comment_label == "hx_add_comment_to_sentinel"
+    assert Sentinel._comment_label == "add_comment_sentinel"
     assert hasattr(a_sentinel, "add_comment_path")
     assert isinstance(a_sentinel.add_comment_path, URLPattern)
     assert a_sentinel.add_comment_path.name == Sentinel._comment_label

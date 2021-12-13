@@ -18,15 +18,13 @@ class Sentinel(AbstractCommentable):
         return self.title
 
     def get_absolute_url(self):
-        from .urls import app_name
-
-        return reverse(f"{app_name}:sentinel_detail", args=[self.pk])
+        return reverse(
+            f"{self._meta.app_label}:sentinel_detail", args=[self.pk]
+        )
 
     @cached_property
     def add_comment_url(self) -> str:
-        from .urls import app_name
-
-        return self.set_add_comment_url(app_name, self.pk)
+        return self.set_add_comment_url(self.pk)
 
     @classmethod
     def add_comment_func(cls, request, pk: int) -> TemplateResponse:
@@ -49,15 +47,13 @@ class SentinelSlugged(AbstractCommentable):
         return self.title
 
     def get_absolute_url(self):
-        from .urls import app_name
-
-        return reverse(f"{app_name}:sentinel_slugged_detail", args=[self.slug])
+        return reverse(
+            f"{self._meta.app_label}:sentinel_slugged_detail", args=[self.slug]
+        )
 
     @cached_property
     def add_comment_url(self) -> str:
-        from .urls import app_name
-
-        return self.set_add_comment_url(app_name, self.slug)
+        return self.set_add_comment_url(self.slug)
 
     @classmethod
     def add_comment_func(cls, request, slug: str) -> TemplateResponse:
