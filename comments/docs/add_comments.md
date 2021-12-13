@@ -77,9 +77,7 @@ def sample_func():
 
        @cached_property # copy this to the sentinel model, note `slug` as identifier
        def add_comment_url(self) -> str:
-           from .urls import app_name
-
-           return self.set_add_comment_url(app_name, self.slug)
+           return self.set_add_comment_url(self.slug)
 
        @classmethod # copy this to the sentinel model, note `slug` as identifier
        def add_comment_func(cls, request, slug: str) -> TemplateResponse:
