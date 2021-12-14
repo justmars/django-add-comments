@@ -18,7 +18,7 @@ class Sentinel(AbstractCommentable): # add to class declaration
 
 ## Setup
 
-## Load virtual env
+### Load virtual env
 
 ```zsh
 .venv> poetry add django-add-comments # pip3 install django-add-comments
@@ -33,7 +33,7 @@ django-extensions = "^3.1.5"
 django-crispy-forms = "^1.13.0"
 ```
 
-## Add app to project settings
+### Add app to project settings
 
 ```python
 # in project_folder/settings.py
@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-## Add basic routes to urlpatterns
+### Add basic routes to urlpatterns
 
 ```python
 # in project_folder/urls.py
@@ -55,7 +55,7 @@ urlpatterns = [
 ]
 ```
 
-## Add Comment model to database
+### Add Comment model to database
 
 ```zsh
 .venv> python manage.py migrate
