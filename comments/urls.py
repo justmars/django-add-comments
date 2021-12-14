@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .apps import CommentsConfig
 from .views import (
     hx_del_comment,
     hx_edit_comment,
@@ -7,7 +8,7 @@ from .views import (
     hx_view_comment,
 )
 
-app_name = "comments"
+app_name = CommentsConfig.name
 urlpatterns = [
     path("toggle/<uuid:id>", hx_toggle_comment, name="hx_toggle_comment"),
     path("edit/<uuid:id>", hx_edit_comment, name="hx_edit_comment"),

@@ -75,7 +75,7 @@ class AbstractCommentable(models.Model):
             idx ([type]): This can either be the inheriting model instance's `slug` or `pk`, depending on the model's structure.
 
         Returns:
-            str: a URL path under the namespace of `app_name`, directed towards `idx` instance. Calling this URL will enable the commenting function under `allow_commenting_form_on_target_instance()` to work.
+            str: a URL which will lead to to an `idx` instance. Calling this URL will enable the commenting function under `allow_commenting_form_on_target_instance()` to work.
         """
         return reverse(
             f"{cls._meta.app_label}:{cls._comment_label}", args=[idx]
@@ -85,7 +85,7 @@ class AbstractCommentable(models.Model):
     def set_add_comment_path(
         cls, endpoint_token: str, func_comment: Callable
     ) -> URLPattern:
-        """This results in a `path` object that needs to be added to `urlpatterns`.
+        """The resulting path needs to be added to `urlpatterns`.
 
         Args:
             endpoint_token (str): e.g. <pk:int> or <title_slug:slug>, a converter URL parameter based on path converters

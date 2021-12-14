@@ -103,10 +103,10 @@ Add path to the sentinel's url patterns
 ```python
 # sentinels/urls.py
 from .models import Sentinel
-
-app_name = "sentinels" # remember the app_name above in relation to the `add_comment_url` property
+from .apps import SentinelConfig # already pre-made during `python manage.py startapp sentinels`
+app_name = SentinelConfig.name # remember the `app_name` in relation to the `add_comment_url` property
 url_patterns = [
-    Sentinel.add_comment_path, # This is really just a shortcut to a created "name route to a view" function.
+    Sentinel.add_comment_path, # This is really just a shortcut to a created path.
     ...
 ]
 ```
