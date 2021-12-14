@@ -1,6 +1,7 @@
 from django.urls import path
 from django.views.generic import DetailView, ListView
 
+from .apps import SentinelsConfig
 from .models import Sentinel, SentinelSlugged
 
 sentinel_patterns = [
@@ -25,7 +26,7 @@ sentinel_slugged_patterns = [
     ),
 ]
 
-app_name = "sentinels"
+app_name = SentinelsConfig.name
 urlpatterns = (
     sentinel_patterns
     + sentinel_slugged_patterns
