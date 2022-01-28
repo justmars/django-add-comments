@@ -14,20 +14,20 @@ packages = [
 python = "^3.8"
 Django = "^4.0"
 django-extensions = "^3.1.5"
-django-crispy-forms = "^1.13.0"
+django-crispy-forms = "^1.14.0"
 
 
 [tool.poetry.dev-dependencies]
-djhtml = "^1.4.10"
+djhtml = "^1.4.11"
 pytest = "^6.2.5"
 pytest-django = "^4.5.1"
 pytest-cov = "^2.12.1"
-mypy = "^0.902"
+mypy = "^0.930"
 black = "^21.12b0"
 isort = "^5.10.1"
 pre-commit = "^2.16.0"
 
-[tool.pytest]
+[tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings" # depends on project root
 minversion = "6.0"
 addopts = "--ds=config.settings"
