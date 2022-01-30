@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-add-comments"
-version = "0.0.5"
+version = "0.0.6"
 description = "Add and display htmx comments to arbitrary Django models."
 authors = ["Marcelino G. Veloso III <mars@veloso.one>"]
 readme = "README.md"
@@ -23,7 +23,7 @@ pytest = "^6.2.5"
 pytest-django = "^4.5.1"
 pytest-cov = "^2.12.1"
 mypy = "^0.930"
-black = "^21.12b0"
+black = "^22.1"
 isort = "^5.10.1"
 pre-commit = "^2.16.0"
 

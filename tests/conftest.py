@@ -29,6 +29,7 @@ def a_comment(a_sentinel, a_commenter):
         content="Lorem ipsum separate unique text",
         author=a_commenter,
         content_object=a_sentinel,
+        is_public=True,
     )
 
 

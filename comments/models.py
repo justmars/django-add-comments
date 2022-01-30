@@ -118,7 +118,7 @@ class AbstractCommentable(models.Model):
         if not request.user.is_authenticated:  # required to comment
             return redirect("%s?next=%s" % (settings.LOGIN_URL, request.path))
 
-        form = CommentModelForm(request.POST or None, submit_url=request.path)
+        form = CommentModelForm(request.POST or None)
         if request.method == "POST" and form.is_valid():
             comment = form.save(commit=False)
             comment.author = request.user

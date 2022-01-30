@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>Title: {{ object.title }}</h1>
-    {% load comments %}
-    {% list_comments object %}
+    <div class="container">
+        <h1>Title: {{ object.title }}</h1>
+        {% load comments %}
+        {% list_comments object %}
+    </div>
 {% endblock content %}

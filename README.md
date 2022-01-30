@@ -149,9 +149,9 @@ Add template tag to sentinel's template to show form with list
 
 ```jinja
 <!-- sentinels/templates/sentinel_detail.html -->
-<h1>Title: {{ obj.title }}</h1>  <!-- the `obj` is whatever variable passed to the template -->
+<h1>Title: {{ obj.title }}</h1>
 {% load comments %} <!-- see templatetags/comments.py which contains `object.add_comment_url`  -->
-{% list_comments obj %}
+{% list_comments obj %} <!-- the `obj` is whatever variable passed to the template -->
 ```
 
 The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](../templatetags/comments.py).

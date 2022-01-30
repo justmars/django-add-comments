@@ -37,12 +37,7 @@ def hx_del_comment(request: HttpRequest, id: uuid.UUID) -> HttpResponse:
 def hx_edit_comment(request: HttpRequest, id: uuid.UUID) -> TemplateResponse:
     """If a `form` is passed to the card, the update view is called; otherwse the comment's detail view is displayed."""
     comment = Comment.get_for_user(id, request.user)
-    form = CommentModelForm(
-        request.POST or None,
-        instance=comment,
-        submit_url=request.path,
-        revert_url=comment.get_absolute_url(),
-    )
+    form = CommentModelForm(request.POST or None, instance=comment)
     if request.method == "POST" and form.is_valid():
         comment.save(update_fields=["content", "is_public"])
         return TemplateResponse(request, CARD, {"comment": comment})

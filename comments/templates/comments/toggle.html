@@ -1,0 +1,17 @@
+<form class="float-end">
+    <div class="form-check form-switch">
+    <input
+        class="form-check-input"
+        id="comment-{{comment.id}}" {% comment %} Helps auto-focus after change {% endcomment %}
+        type="checkbox"
+        role="switch"
+        hx-target="closest section"
+        hx-post="{% url 'comments:hx_toggle_comment' comment.id %}"
+        hx-swap="outerHTML"
+        {% if comment.is_public %}checked{% endif %}
+    >
+    <label class="form-check-label" for="comment-{{comment.id}}">
+        <small>{% if comment.is_public %}Public{% else %}Private{% endif %}.</small>
+    </label>
+    </div>
+</form>

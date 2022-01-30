@@ -1,7 +1,12 @@
 {% if user.is_authenticated %}
-    <section>
+    <section class="mb-2">
         <h2>Add a comment</h2>
-        <div hx-trigger="load" hx-get="{{form_url}}" hx-target="this" hx-swap="innerHTML"></div>
+        <div
+            hx-trigger="load"
+            hx-get="{{form_url}}"
+            hx-target="this"
+            hx-swap="innerHTML">
+        </div>
     </section>
 {% endif %}
 {% if inserted %}

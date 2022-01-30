@@ -1,4 +1,4 @@
-<list spacing="xl">
+<div class="container">
     {% for comment in comments %}
         {% if forloop.first and user.is_authenticated %}
             {% include './inserter.html' %}
@@ -11,4 +11,4 @@
             <h3>User must be logged into comment.</h3>
         {% endif %}
     {% endfor %}
-</list>
+</div>
