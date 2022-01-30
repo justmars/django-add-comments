@@ -1,6 +1,6 @@
 {% if user.is_authenticated %}
     <section class="mb-2">
-        <h2>Add a comment</h2>
+        <h2>{{head_label}}</h2>
         <div
             hx-trigger="load"
             hx-get="{{form_url}}"

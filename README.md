@@ -123,10 +123,10 @@ class Sentinel(AbstractCommentable):
 
 _Gotcha_: if `pk` is identifier, revise `<slug:slug>` to `<pk:int>` above:
 
-1. `self.set_add_comment_url(app_name, self.pk)`
+1. `self.set_add_comment_url(self.pk)`
 2. `def add_comment_func(cls, request, pk: int):`
 3. `target = cls.objects.get(pk=pk)`
-4. `cls.set_add_comment_path("<pk:int>", cls.add_comment_func)`
+4. `cls.set_add_comment_path("<int:pk>", cls.add_comment_func)`
 
 ### Add sentinel namespaced url for adding comments
 
@@ -149,11 +149,12 @@ Add template tag to sentinel's template to show form with list
 
 ```jinja
 <!-- sentinels/templates/sentinel_detail.html -->
-<h1>Title: {{ obj.title }}</h1>
+<h1>Title: {{ object.title }}</h1>
 {% load comments %} <!-- see templatetags/comments.py which contains `object.add_comment_url`  -->
-{% list_comments obj %} <!-- the `obj` is whatever variable passed to the template -->
+{% list_comments sentinel_target_obj=object head_label='Add an Answer'%}
+<!-- the `object` is whatever variable passed to the template, the head_label provides an ability to label the items to be inputted. The default is 'Add a Comment' -->
 ```
 
-The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](../templatetags/comments.py).
+The form that represents this "add comment" action / url will be loaded in every comment list. See context in [template tag](./comments/templatetags/comments.py).
 
 [^1]: [No page refresh](./comments/docs/frontend.md)

@@ -3,6 +3,6 @@
     <div class="container">
         <h1>Title: {{ object.title }}</h1>
         {% load comments %}
-        {% list_comments object %}
+        {% list_comments sentinel_target_obj=object head_label='Add an Answer'%}
     </div>
 {% endblock content %}

@@ -6,8 +6,7 @@ register = template.Library()
 
 
 @register.inclusion_tag("comments/list.html", takes_context=True)
-def list_comments(context, sentinel_target_obj):
-
+def list_comments(context, sentinel_target_obj, head_label="Add a Comment"):
     if not hasattr(sentinel_target_obj, "comments"):
         raise ImproperlyConfigured
 
@@ -22,6 +21,7 @@ def list_comments(context, sentinel_target_obj):
         or_condition.add(Q(**{k: v}), Q.OR)
 
     return {
+        "head_label": head_label,
         "user": context["user"],
         "comments": sentinel_target_obj.comments.filter(or_condition),
         "form_url": sentinel_target_obj.add_comment_url,
