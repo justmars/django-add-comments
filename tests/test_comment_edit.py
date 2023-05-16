@@ -8,8 +8,13 @@ from django.urls import reverse
 
 from comments.views import CARD
 
-ENDPOINT = lambda x: f"/comments/edit/{x}"
-ROUTE = lambda x: reverse("comments:hx_edit_comment", kwargs={"id": x})
+
+def ENDPOINT(x):
+    return f"/comments/edit/{x}"
+
+
+def ROUTE(x):
+    return reverse("comments:hx_edit_comment", kwargs={"id": x})
 
 
 @pytest.mark.django_db
@@ -33,9 +38,7 @@ def test_edit_comment_forbidden_even_if_authenticated(
 
 
 @pytest.mark.parametrize("formatter", [ENDPOINT, ROUTE])
-def test_edit_comment_get_authenticated(
-    client, a_commenter, a_comment, formatter
-):
+def test_edit_comment_get_authenticated(client, a_commenter, a_comment, formatter):
     client.force_login(a_commenter)
     url = formatter(a_comment.id)
     response = client.get(url)

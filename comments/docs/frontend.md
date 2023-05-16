@@ -42,29 +42,32 @@ The response targets the entire `<section>` because of the form's `<submit>` att
 ```python
 # comments/forms.py
 from crispy_forms.layout import Submit
+
 ...
 Submit(
     "submit",
     "Submit",
-    hx_post=submit_url, # i.e. `hx_comment_adder`
-    hx_target=f"closest section", # see comments/templates/inserter.html
+    hx_post=submit_url,  # i.e. `hx_comment_adder`
+    hx_target=f"closest section",  # see comments/templates/inserter.html
     hx_swap="outerHTML",
     hx_trigger="click",
 )
 # comments/views.py
 from django.template.response import TemplateResponse
+
+
 def hx_add_comment_to_target_obj(request: HttpRequest, target_obj: ContentType):
     ...
     if request.method == "POST" and form.is_valid():
         return TemplateResponse(
-                request,
-                "comments/inserter.html", # see comments/templates/inserter.html
-                {
-                    "inserted": comment, # newly inserted comment at the top of the list of comments
-                    "form_url": request.path, # reloads the form because of hx-trigger "load"
-                    "label": "Add Comment",
-                },
-            )
+            request,
+            "comments/inserter.html",  # see comments/templates/inserter.html
+            {
+                "inserted": comment,  # newly inserted comment at the top of the list of comments
+                "form_url": request.path,  # reloads the form because of hx-trigger "load"
+                "label": "Add Comment",
+            },
+        )
     ...
 ```
 

@@ -4,9 +4,12 @@ Add `comments` to a Django model via mixin:
 
 ```python
 # app/models.py
-from comment.models import AbstractCommentable # import mixin
-class Sentinel(AbstractCommentable): # add to class declaration
+from comment.models import AbstractCommentable  # import mixin
+
+
+class Sentinel(AbstractCommentable):  # add to class declaration
     """Any `app`, e.g. `essay`, `article`... can be 'commentable'."""
+
     title = models.CharField(max_length=50)
 ```
 
@@ -39,8 +42,8 @@ django-crispy-forms = "^1.13.0"
 # in project_folder/settings.py
 INSTALLED_APPS = [
     ...,
-    'crispy_forms',  # add crispy_forms at least > v1.13, if not yet added
-    'comments' # this is the new django-comments folder
+    "crispy_forms",  # add crispy_forms at least > v1.13, if not yet added
+    "comments",  # this is the new django-comments folder
 ]
 ```
 
@@ -48,10 +51,13 @@ INSTALLED_APPS = [
 
 ```python
 # in project_folder/urls.py
-from django.urls import path, include # new
+from django.urls import path, include  # new
+
 urlpatterns = [
     ...,
-    path('comments/', include('comments.urls')) # routes for update, delete, view, toggle comment
+    path(
+        "comments/", include("comments.urls")
+    ),  # routes for update, delete, view, toggle comment
 ]
 ```
 
@@ -84,17 +90,17 @@ What we'd like is the ability to write a comment to `obj` through a url represen
 
 ```python
 # sentinels/models.py
-from comments.models import AbstractCommentable # new
-from django.template.response import TemplateResponse # new
-from django.urls import reverse, URLPattern # new
-from django.utils.functional import cached_property, classproperty # new
+from comments.models import AbstractCommentable  # new
+from django.template.response import TemplateResponse  # new
+from django.urls import reverse, URLPattern  # new
+from django.utils.functional import cached_property, classproperty  # new
 ```
 
 ### Make sentinel model inherit from abstract base model
 
 ```python
 # sentinels/models.py
-class Sentinel(AbstractCommentable): # new
+class Sentinel(AbstractCommentable):  # new
     ...
 ```
 
@@ -103,20 +109,19 @@ class Sentinel(AbstractCommentable): # new
 ```python
 # sentinels/models.py
 class Sentinel(AbstractCommentable):
+    id = models.UUIDField
+    slug = models.Slugfield
 
-    id = models.UUIDField ... # identifier is UUID
-    slug = models.Slugfield ...
-
-    @cached_property # copy this to the sentinel model, note `slug` as identifier
+    @cached_property  # copy this to the sentinel model, note `slug` as identifier
     def add_comment_url(self) -> str:
         return self.set_add_comment_url(self.slug)
 
-    @classmethod # copy this to the sentinel model, note `slug` as identifier
+    @classmethod  # copy this to the sentinel model, note `slug` as identifier
     def add_comment_func(cls, request, slug: str) -> TemplateResponse:
         target = cls.objects.get(slug=slug)
         return cls.allow_commenting_form_on_target_instance(request, target)
 
-    @classproperty # copy this to the sentinel model, note `slug` as identifier
+    @classproperty  # copy this to the sentinel model, note `slug` as identifier
     def add_comment_path(cls) -> URLPattern:
         return cls.set_add_comment_path("<slug:slug>", cls.add_comment_func)
 ```
@@ -135,11 +140,16 @@ Add path to the sentinel's url patterns:
 ```python
 # sentinels/urls.py
 from .models import Sentinel
-from .apps import SentinelConfig # already pre-made during `python manage.py startapp sentinels`
-app_name = SentinelConfig.name # remember the `app_name` in relation to the `add_comment_url` property
+from .apps import (
+    SentinelConfig,
+)  # already pre-made during `python manage.py startapp sentinels`
+
+app_name = (
+    SentinelConfig.name
+)  # remember the `app_name` in relation to the `add_comment_url` property
 url_patterns = [
-    Sentinel.add_comment_path, # This is really just a shortcut to a created path.
-    ...
+    Sentinel.add_comment_path,  # This is really just a shortcut to a created path.
+    ...,
 ]
 ```
 

@@ -18,9 +18,7 @@ class Sentinel(AbstractCommentable):
         return self.title
 
     def get_absolute_url(self):
-        return reverse(
-            f"{self._meta.app_label}:sentinel_detail", args=[self.pk]
-        )
+        return reverse(f"{self._meta.app_label}:sentinel_detail", args=[self.pk])
 
     @cached_property
     def add_comment_url(self) -> str:
@@ -37,7 +35,8 @@ class Sentinel(AbstractCommentable):
 
 
 class SentinelSlugged(AbstractCommentable):
-    """This is a test model. Uses an explicit `uuid` as primary key, and a `slug` field for URLs."""
+    """This is a test model. Uses an explicit `uuid` as primary key,
+    and a `slug` field for URLs."""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     slug = AutoSlugField(populate_from=["title"])

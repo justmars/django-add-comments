@@ -32,7 +32,8 @@ class Comment(TimeStampedModel):
         get_user_model(), on_delete=models.PROTECT, related_name="comments"
     )
 
-    # generic fk base, uses CharField to accomodate sentinel models with UUID as primary key
+    # generic fk base, uses CharField to accomodate sentinel models with UUID
+    # as primary key
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.CharField(max_length=255)  #
     content_object = GenericForeignKey("content_type", "object_id")
@@ -56,9 +57,7 @@ class Comment(TimeStampedModel):
 
 
 class AbstractCommentable(models.Model):
-    comments = GenericRelation(
-        Comment, related_query_name="%(app_label)s_%(class)ss"
-    )
+    comments = GenericRelation(Comment, related_query_name="%(app_label)s_%(class)ss")
 
     class Meta:
         abstract = True
@@ -69,17 +68,21 @@ class AbstractCommentable(models.Model):
 
     @classmethod
     def set_add_comment_url(cls, idx) -> str:
-        """An `add_comment_url` needs to be initialized by all models inheriting from `AbstractCommentable`. This function generates a named route. The route originates from `set_add_comment_path`, which is added by the inheriting model to its URL patterns.
+        """An `add_comment_url` needs to be initialized by all models inheriting from
+        `AbstractCommentable`. This function generates a named route. The route
+        originates from `set_add_comment_path`, which is added by the inheriting model
+        to its URL patterns.
 
         Args:
-            idx ([type]): This can either be the inheriting model instance's `slug` or `pk`, depending on the model's structure.
+            idx ([type]): This can either be the inheriting model instance's `slug` or
+            `pk`, depending on the model's structure.
 
         Returns:
-            str: a URL which will lead to to an `idx` instance. Calling this URL will enable the commenting function under `allow_commenting_form_on_target_instance()` to work.
-        """
-        return reverse(
-            f"{cls._meta.app_label}:{cls._comment_label}", args=[idx]
-        )
+            str: a URL which will lead to to an `idx` instance. Calling this URL will
+            enable the commenting function under `allow_commenting_form_on_target_instance()`
+            to work.
+        """  # noqa: E501
+        return reverse(f"{cls._meta.app_label}:{cls._comment_label}", args=[idx])
 
     @classmethod
     def set_add_comment_path(
@@ -93,7 +96,7 @@ class AbstractCommentable(models.Model):
 
         Returns:
             URLPattern: Should be added to `urlpatterns` list of `app_name`, inheriting child of AbstractCommentable.
-        """
+        """  # noqa: E501
         return path(
             f"{cls._comment_label}/{endpoint_token}",
             func_comment,
@@ -112,7 +115,7 @@ class AbstractCommentable(models.Model):
 
         Returns:
             Union[TemplateResponse, HttpResponseRedirect]: If the user is not logged in, redirect via `HttpResponseRedirect`. Otherwise enable get/post requests resulting in a `TemplateResponse`.
-        """
+        """  # noqa: E501
         from .forms import CommentModelForm
 
         if not request.user.is_authenticated:  # required to comment

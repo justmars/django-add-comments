@@ -5,8 +5,13 @@ from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 
-ENDPOINT = lambda x: f"/comments/delete/{x}"
-ROUTE = lambda x: reverse("comments:hx_del_comment", kwargs={"id": x})
+
+def ENDPOINT(x):
+    return f"/comments/delete/{x}"
+
+
+def ROUTE(x):
+    return reverse("comments:hx_del_comment", kwargs={"id": x})
 
 
 @pytest.mark.django_db
